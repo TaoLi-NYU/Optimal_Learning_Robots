@@ -1,0 +1,37 @@
+import gym
+import matplotlib.pyplot as plt
+from DQN_agent import ReplayBuffer, QNetworks, DQNagent
+
+env = gym.make('CartPole-v0')
+# for deep Q-learning
+buffer = ReplayBuffer(memory_size=10000, initial=2000)
+dqn = QNetworks(env, learning_rate=1e-3)
+agent = DQNagent(env, dqn, buffer)
+eps, training_rewards, mean_training_rewards = agent.dqn_train()
+agent.display_mode('cartpole_dqn.gif')
+# for double deep Q-learning
+buffer_ddqn = ReplayBuffer(memory_size=10000, initial=2000)
+ddqn = QNetworks(env, learning_rate=1e-3)
+agent_ddqn = DQNagent(env, ddqn, buffer_ddqn)
+eps_ddqn, training_rewards_ddqn, mean_training_rewards_ddqn = agent_ddqn.dqn_train(ddqn=True)
+agent_ddqn.display_mode('cartpole_ddqn.gif')
+
+plt.figure()
+plt.plot(training_rewards, label='Rewards')
+plt.plot(mean_training_rewards, label='Mean Rewards')
+plt.xlabel('Episodes')
+plt.ylabel('Rewards')
+plt.title('DQN rewards plot')
+plt.legend()
+plt.show()
+plt.savefig('DQN.png')
+
+plt.figure()
+plt.plot(training_rewards_ddqn, label='Rewards')
+plt.plot(mean_training_rewards_ddqn, label='Mean Rewards')
+plt.xlabel('Episodes')
+plt.ylabel('Rewards')
+plt.title('DDQN rewards plot')
+plt.legend()
+plt.show()
+plt.savefig('DDQN.png')
